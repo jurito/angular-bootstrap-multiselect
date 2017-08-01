@@ -34,6 +34,7 @@
             require: 'ngModel',
             templateUrl: 'multiselect.html',
             link: function ($scope, $element, $attrs, $ngModelCtrl) {
+                alert('test');
                 $scope.selectionLimit = $scope.selectionLimit || 0;
                 $scope.searchLimit = $scope.searchLimit || 9999;
 
