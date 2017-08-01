@@ -35,7 +35,7 @@
             templateUrl: 'multiselect.html',
             link: function ($scope, $element, $attrs, $ngModelCtrl) {
                 $scope.selectionLimit = $scope.selectionLimit || 0;
-                $scope.searchLimit = $scope.searchLimit || 25;
+                $scope.searchLimit = $scope.searchLimit || 9999;
 
                 $scope.searchFilter = '';
 

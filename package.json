@@ -9,7 +9,7 @@
   },
   "main": "index.js",
   "devDependencies": {
-    "grunt": "~1.0.1",
+    "grunt": "^1.0.1",
     "grunt-bootlint": "~0.10.1",
     "grunt-bump": "~0.8.0",
     "grunt-contrib-clean": "~1.0.0",
