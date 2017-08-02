@@ -34,7 +34,14 @@
             require: 'ngModel',
             templateUrl: 'multiselect.html',
             link: function ($scope, $element, $attrs, $ngModelCtrl) {
-                alert('test');
+
+                $scope.getListElementClass=function(item){
+                    if(typeof(item)!=='string' && ('parent_family' in item) && item.parent_family!==null)
+                    {
+                        return 'nested-multiselect-item';
+                    }
+                }
+
                 $scope.selectionLimit = $scope.selectionLimit || 0;
                 $scope.searchLimit = $scope.searchLimit || 9999;
 
@@ -61,27 +68,35 @@
                 $document.on('click', closeHandler);
 
                 var updateSelectionLists = function () {
+
                     if (!$ngModelCtrl.$viewValue) {
+
                         if ($scope.selectedOptions) {
                             $scope.selectedOptions = [];
                         }
                         $scope.unselectedOptions = $scope.resolvedOptions.slice(); // Take a copy
                     } else {
+
                         $scope.selectedOptions = $scope.resolvedOptions.filter(function (el) {
+
                             var id = $scope.getId(el);
+
                             for (var i = 0; i < $ngModelCtrl.$viewValue.length; i++) {
                                 var selectedId = $scope.getId($ngModelCtrl.$viewValue[i]);
+
                                 if (id === selectedId) {
                                     return true;
                                 }
                             }
                             return false;
                         });
+
                         $scope.unselectedOptions = $scope.resolvedOptions.filter(function (el) {
                             return $scope.selectedOptions.indexOf(el) < 0;
                         });
                     }
                 };
+
 
                 $scope.toggleDropdown = function () {
                     $scope.open = !$scope.open;
@@ -142,6 +157,37 @@
                     $scope.unselectedOptions = $scope.resolvedOptions.slice(); // Take a copy;
                 };
 
+                var selectRelated=function(item){
+                    var toRemove=[];
+
+                    if(item.parent_family===null){
+                        for(var n=0;n<$scope.unselectedOptions.length;n++)
+                        {
+                            if($scope.unselectedOptions[n].parent_family===item.family_id)
+                            {
+                                $scope.selectedOptions.push($scope.unselectedOptions[n]);
+                                toRemove.push(n);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for(var n=0;n<$scope.unselectedOptions.length;n++)
+                        {
+                            if($scope.unselectedOptions[n].family_id===item.parent_family)
+                            {
+                                $scope.selectedOptions.push($scope.unselectedOptions[n]);
+                                toRemove.push(n);
+                                break;
+
+                            }
+                        }
+                    }
+
+                    for(var m=0;m<toRemove.length;m++) $scope.unselectedOptions.splice(toRemove[m], 1);
+                    
+                }
+
                 $scope.toggleItem = function (item) {
                     if (typeof $scope.selectedOptions === 'undefined') {
                         $scope.selectedOptions = [];
@@ -155,13 +201,17 @@
                         var unselectedIndex = $scope.unselectedOptions.indexOf(item);
                         $scope.unselectedOptions.splice(unselectedIndex, 1);
                         $scope.selectedOptions.push(item);
+
+                        if(typeof(item)!=='string' && 'family_id' in item) selectRelated(item);
                     }
                 };
 
                 $scope.getId = function (item) {
+
                     if (angular.isString(item)) {
                         return item;
                     } else if (angular.isObject(item)) {
+                        
                         if ($scope.idProp) {
                             return multiselect.getRecursiveProperty(item, $scope.idProp);
                         } else {

@@ -41,8 +41,8 @@ angular.module("multiselect.html", []).run(["$templateCache", function ($templat
     "        <li ng-show=\"showSearch\" class=\"divider\"></li>\n" +
     "        <li role=\"presentation\" ng-repeat=\"option in unselectedOptions | filter:search() | limitTo: searchLimit\"\n" +
     "            ng-if=\"!isSelected(option)\"\n" +
-    "            ng-class=\"{disabled : selectionLimit && selectedOptions.length >= selectionLimit}\">\n" +
-    "            <a class=\"item-unselected\" href=\"\" title=\"{{showTooltip ? getDisplay(option) : ''}}\" ng-click=\"toggleItem(option); $event.stopPropagation()\" style=\"overflow-x: auto\">\n" +
+    "            ng-class=\"{disabled : selectionLimit && selectedOptions.length >= selectionLimit , }\">\n" +
+    "            <a class=\"item-unselected\" href=\"\" title=\"{{showTooltip ? getDisplay(option) : ''}}\" ng-click=\"toggleItem(option); $event.stopPropagation()\" ng-class=\"getListElementClass(option)\" style=\"overflow-x: auto\">\n" +
     "                {{getDisplay(option)}}\n" +
     "            </a>\n" +
     "        </li>\n" +
